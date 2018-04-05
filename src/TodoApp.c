@@ -1,8 +1,8 @@
 /*
  ============================================================================
  Name        : TodoApp.c
- Author      : Universitas Nahdlatul Ulama Indonesia
- Version     :
+ Author      : Kelompok III
+ Version     : 0.0.0
  Copyright   : GPLv2
  Description : TodoApp
  ============================================================================
@@ -25,6 +25,9 @@ struct Tasks
 int totalTask = 3;
 struct Tasks records[10];
 
+/**
+ * Print karakter spasi
+ */
 void printSpace(int length, int max)
 {
 	int totalSpace = max - length;
@@ -34,6 +37,9 @@ void printSpace(int length, int max)
 	}
 }
 
+/**
+ * Membuat Task Baru
+ */
 void newTask()
 {
 	char task[32];
@@ -43,7 +49,6 @@ void newTask()
 	struct Tasks _task;
 
 	puts("New Task");
-	/** Header Line */
 	puts("-------------------------------------------------------");
 	puts ("Task:");
 	scanf (" %[^\n]s", inputTask);
@@ -59,6 +64,9 @@ void newTask()
 	totalTask++;
 }
 
+/**
+ * Mark as Done
+ */
 void markAsDone(int index)
 {
     records[index].status = 'Done';
@@ -86,10 +94,8 @@ int main(void)
 	strcpy (records[2].status, "Pending");
 	strcpy (records[2].due, "2018-10-01");
 
-	puts ("[ Ctrl+N ] New Task");
-	/** Table Header */
+	/** puts ("[ Ctrl+N ] New Task"); */
 	puts("#    Task                            Status    Due Date");
-	/** Header Line */
 	puts("-------------------------------------------------------");
 
 	/**
@@ -116,19 +122,11 @@ int main(void)
 	}
 
 	do {
-		//puts("Enter some text :");
 		scanf("%s", anyKey);
 
 		if ( !strcmp(anyKey, "\007") ) {
 			newTask();
 		}
-
-		else {
-			printf("Nope - I do not recognise that phrase.... \n");
-		}
-
-		printf("Try again? (y/n) : ");
-		scanf(" %c%*c", &ch);
 	} while( toupper(ch) != 'N' );
 
 	return 0;
