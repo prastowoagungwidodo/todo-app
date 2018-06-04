@@ -1,4 +1,6 @@
-# Todo List in C
+# Todo List
+Original source code: https://github.com/abimaelmartell/todo
+
 ## Compile
 ```sh
 ./configure
