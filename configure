@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# create database from base
+cp data/todos-base.db data/todos.db

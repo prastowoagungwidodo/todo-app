@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Todo List - UNUSIA</title>
+        <link rel="stylesheet" type="text/css" href="/css/base.css" />
+        <link rel="stylesheet" type="text/css" href="/css/todo.css" />
+        <script src="/js/moment.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            moment.locale('id');
+        </script>
+        <style media="screen">
+            .editinput{
+                display:none;
+                font-size: 24px;
+                font-weight: 400;
+                padding: 16px 16px 16px 60px;
+                border: none;
+                background: rgba(0, 0, 0, 0.003);
+                box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+            }
+        </style>
+    </head>
+    <body>
+        <section class="todoapp">
+			<header class="header">
+				<h1>todo list</h1>
+                <form action="todos/create" method="post">
+                    <input id="todo-text" class="new-todo" type="text" name="text" placeholder="Apa yang akan anda kerjakan?" required="true" autofocus="true"/>
+                </form>
+			</header>
+			<section class="main">
+				<input id="toggle-all" class="toggle-all" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
+				<ul class="todo-list todos"></ul>
+			</section>
+            <!-- <footer class="footer">
+				<span class="todo-count"></span>
+				<ul class="filters">
+					<li>
+						<a href="#/" class="selected">All</a>
+					</li>
+					<li>
+						<a href="#/active">Active</a>
+					</li>
+					<li>
+						<a href="#/completed">Completed</a>
+					</li>
+				</ul>
+				<button class="clear-completed">Clear completed</button>
+			</footer> -->
+		</section>
+		<footer class="info">
+            <img src="/img/logo.png" style="position:absolute;left:50%;margin-left:-150px;"/>
+		</footer>
+        <script type="text/template" id="todo-template">
+
+            <% if(status == 0){ %>
+                <li class="">
+                    <div class="view">
+                        <input class="toggle check" type="checkbox">
+                        <label>
+                            <%- text %>
+                            <span style="float:right;font-size:16px;">
+                                <%- moment(due).fromNow() %>
+                            </span>
+                        </label>
+                        <input type="text" value="<%- text %>" class="editinput"/>
+                    </div>
+                </li>
+                <% }else{ %>
+                    <li class="completed">
+                        <div class="view">
+                            <input class="toggle check" type="checkbox" checked>
+                            <label>
+                                <%- text %>
+                                <span style="float:right;font-size:16px;">
+                                    <%- moment(due).fromNow() %>
+                                </span>
+                            </label>
+                            <input type="text" value="<%- text %>"  class="editinput"/>
+                        </div>
+                    </li>
+                <% } %>
+        </script>
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/underscore-min.js"></script>
+        <script src="/js/backbone-min.js"></script>
+        <script src="/js/app.js"></script>
+    </body>
+</html>

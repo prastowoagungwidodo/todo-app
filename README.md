@@ -1,3 +1,19 @@
-# todo-app
-Todo List Application writing in C [Sebagai tugas kelompok III mata kuliah Struktur Data UNU]
-![Todo Apps](https://raw.githubusercontent.com/transformatika/todo-app/master/todo-tasklist.png)
+# Todo List in C
+## Compile
+```sh
+./configure
+make
+```
+
+## Deploy
+```
+heroku create --stack cedar --buildpack http://github.com/heroku/heroku-buildpack-c.git
+git push heroku master
+```
+
+## Tests
+
+### Integration
+Integration tests are written entirely in ruby, using the rspec gem and the httparty gem to do http requests.
+
+To run the integration tests you need tu run the app `./todo` then run `rspec` in another shell.
