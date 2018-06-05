@@ -6,7 +6,8 @@ var app = app || {};
 
         defaults: {
             text: '',
-            status: ''
+            due: moment().format('YYYY-MM-DD'),
+            status: 0
         },
 
         changeStatus: function() {
@@ -27,13 +28,15 @@ var app = app || {};
     app.Todos = new app.TodoCollection();
 
     app.TodoView = Backbone.View.extend({
+        //el: $('#todos-container'),
         tagName: 'li',
         template: _.template($("#todo-template").html()),
 
         events: {
             'click .check': 'changeStatus',
             'click label': 'showEditInput',
-            'keypress input': 'updateText'
+            'change .editdue': 'updateText',
+            'keypress .edittext': 'updateText'
         },
 
         initialize: function() {
@@ -49,7 +52,15 @@ var app = app || {};
             } else {
                 this.$el.removeClass("done");
             }
-
+            var editDueElement = this.$el.find('.editdue');
+            var vm = this;
+            this.$el.find('.editdue').datepicker({
+                language: 'id',
+                autoClose: true,
+                onSelect: function(date, dt, inst){
+                    vm.model.set({due: date});
+                }
+            })
             return this;
         },
 
@@ -59,19 +70,33 @@ var app = app || {};
 
         showEditInput: function(event) {
             this.$el.find("label").hide();
-            this.$el.find("input").show().focus();
+            this.$el.find("input").show();
+            this.$el.find("edittext").focus();
+            var editdue = this.$el.find('.editdue');
         },
 
         updateText: function(event) {
-            var $input = $(event.currentTarget)
-              , text = $input.val().trim();
+            var $input = $(event.currentTarget);
+            var parent = $input.parent();
+            console.log($input.attr('class'));
+            if ($input.attr('class') == 'edittext') {
+                var text = $input.val().trim();
+                var due = parent.find('.editdue').val().trim();
+                if (event.which != 13 || text == "") {
+                    return;
+                }
+            } else {
+                console.log('ON FIRE!');
+                var text = parent.find('.edittext').val().trim();
+                var due = $input.val();
+            }
 
-            if (event.which != 13 || text == "") {
+            if (text === ""){
                 return;
             }
 
-            this.model.save({ text: text });
-            $input.hide();
+            this.model.save({ text: text, due: due });
+            this.$el.find("input").hide();
             this.$el.find("label").show();
         }
     });
@@ -81,7 +106,26 @@ var app = app || {};
 
         events: {
             'keypress #todo-text': 'createTodo',
+            'change #todo-due': 'createTodo',
             'click #delete-completed': 'deleteCompleted'
+        },
+
+        render: function() {
+            $('#todo-due').datepicker({
+                language: 'id',
+                autoClose: true,
+                onSelect: function(date, dt, inst){
+                    var due = date;
+                    var text = $('#todo-text').val().trim();
+                    if (text === "") {
+                        return;
+                    }
+                    app.Todos.create({ text: text, due: due });
+                    $("#todo-text").val("");
+                    $("#todo-due").val("");
+                    inst.clear();
+                }
+            })
         },
 
         initialize: function() {
@@ -103,21 +147,28 @@ var app = app || {};
         },
 
         createTodo: function(event) {
-            if (event.which != 13) {
-                return;
-            } else {
-                event.preventDefault();
+            if ($(event.currentTarget).attr('id') === 'todo-text') {
+                if (event.which != 13) {
+                    return;
+                } else {
+                    event.preventDefault();
+                }
             }
 
             var text = $("#todo-text").val().trim();
+            var due = $('#todo-due').val();
+            if (due === '') {
+                due = moment().format('YYYY-MM-DD');
+            }
 
             if (text == "") {
                 return;
             }
 
-            app.Todos.create({ text: text });
+            app.Todos.create({ text: text, due: due });
 
             $("#todo-text").val('');
+            $("#todo-due").val('');
         },
 
         deleteCompleted: function() {

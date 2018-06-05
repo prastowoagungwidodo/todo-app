@@ -5,19 +5,51 @@
         <title>Todo List - UNUSIA</title>
         <link rel="stylesheet" type="text/css" href="/css/base.css" />
         <link rel="stylesheet" type="text/css" href="/css/todo.css" />
+        <link rel="stylesheet" type="text/css" href="/css/datepicker.min.css" />
+        <script src="/js/jquery.min.js"></script>
         <script src="/js/moment.js" charset="utf-8"></script>
+        <script src="/js/datepicker.min.js" charset="utf-8"></script>
+        <script src="/js/datepicker.id.js" charset="utf-8"></script>
         <script type="text/javascript">
             moment.locale('id');
         </script>
         <style media="screen">
-            .editinput{
+            #todo-text {
+                padding-right: 130px;
+            }
+            #todo-due {
+                position: absolute;
+                right:0;
+                top:0;
+                padding: 16px;
+                border: none;
+                width: 130px;
+                font-size: 24px;
+                font-family: inherit;
+                font-weight: inherit;
+                line-height: 1.4em;
+                z-index: 100;
+            }
+            .edittext{
                 display:none;
                 font-size: 24px;
-                font-weight: 400;
-                padding: 16px 16px 16px 60px;
+                font-weight: 200;
+                padding: 16px 130px 16px 60px;
                 border: none;
                 background: rgba(0, 0, 0, 0.003);
                 box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+            }
+            .editdue {
+                display:none;
+                position:absolute;
+                right:0;
+                top:0;
+                font-size: 24px;
+                font-weight: 200;
+                padding: 16px;
+                border: none;
+                background: transparent;
+                width: 130px;
             }
         </style>
     </head>
@@ -25,14 +57,15 @@
         <section class="todoapp">
 			<header class="header">
 				<h1>todo list</h1>
-                <form action="todos/create" method="post">
+                <form id="form-todo" action="todos/create" method="post">
                     <input id="todo-text" class="new-todo" type="text" name="text" placeholder="Apa yang akan anda kerjakan?" required="true" autofocus="true"/>
+                    <input id="todo-due" onChange="$('#form-todo').submit();" class='todo-due datepicker-here' data-language='id' data-auto-close="true" type="text" name="due" placeholder="Due Date"/>
                 </form>
 			</header>
 			<section class="main">
 				<input id="toggle-all" class="toggle-all" type="checkbox">
 				<label for="toggle-all">Mark all as complete</label>
-				<ul class="todo-list todos"></ul>
+				<ul id="todos-container" class="todo-list todos"></ul>
 			</section>
             <!-- <footer class="footer">
 				<span class="todo-count"></span>
@@ -51,7 +84,8 @@
 			</footer> -->
 		</section>
 		<footer class="info">
-            <img src="/img/logo.png" style="position:absolute;left:50%;margin-left:-150px;"/>
+            <img src="/img/logo.png"/>
+            <p>Using TodoMVC User Interface</p>
 		</footer>
         <script type="text/template" id="todo-template">
 
@@ -65,7 +99,8 @@
                                 <%- moment(due).fromNow() %>
                             </span>
                         </label>
-                        <input type="text" value="<%- text %>" class="editinput"/>
+                        <input type="text" value="<%- text %>"  class="edittext"/>
+                        <input type="text" value="<%- moment(due).format('YYYY-MM-DD') %>" class="editdue"/>
                     </div>
                 </li>
                 <% }else{ %>
@@ -78,12 +113,12 @@
                                     <%- moment(due).fromNow() %>
                                 </span>
                             </label>
-                            <input type="text" value="<%- text %>"  class="editinput"/>
+                            <input type="text" value="<%- text %>"  class="edittext"/>
+                            <input type="text" value="<%- moment(due).format('YYYY-MM-DD') %>" class="editdue"/>
                         </div>
                     </li>
                 <% } %>
         </script>
-        <script src="/js/jquery.min.js"></script>
         <script src="/js/underscore-min.js"></script>
         <script src="/js/backbone-min.js"></script>
         <script src="/js/app.js"></script>
